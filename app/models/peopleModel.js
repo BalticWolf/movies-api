@@ -1,4 +1,7 @@
 class PeopleModel {
+    constructor (db) {
+        this.db = db;
+    }
 
     // get an array of all people
     getPeople() {
@@ -6,8 +9,27 @@ class PeopleModel {
     }
 
     // get an array of people by movie id
-    getMoviePeople() {
+    getPeopleByMovieId(linkTable, movieId, callback) {
+        const people = [];
+        const qry =
+            "SELECT * " +
+            "FROM people " +
+            "INNER JOIN " + linkTable + " t " +
+            "ON people.id = t.peopleId " +
+            "WHERE t.movieId = ?";
+        this.db.query(qry, [movieId], function(err, rows) {
+            if (err) {
+                callback(err, [])
+            }
+            rows.forEach(person => {
+                people.push({
+                    "id": person.id,
+                    "name": person.name
+                })
+            });
+            return callback(null, people);
 
+        });
     }
 
     // create a new person
