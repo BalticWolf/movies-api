@@ -4,8 +4,28 @@ class ReviewModel {
     }
 
     // Get an array of reviews by movie id
-    getReviews() {
-
+    getReviewsByMovieId(movieId, callback) {
+        const reviews = [];
+        const qry =
+            "SELECT * " +
+            "FROM review " +
+            "WHERE movieId = ?";
+        this.db.query(qry, [movieId], function(err, rows) {
+            if (err) {
+                callback(err, [])
+            }
+            rows.forEach(review => {
+                reviews.push({
+                    "id": review.id,
+                    "username": review.username,
+                    "title": review.title,
+                    "content": review.content,
+                    "movieId": review.movieId,
+                    "dateCreated": review.dateCreated
+                })
+            });
+            return callback(null, reviews);
+        });
     }
 
     // Create a new review by movie id

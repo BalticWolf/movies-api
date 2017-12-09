@@ -1,15 +1,12 @@
-class GenresModel {
+class GenreModel {
     constructor (db) {
         this.db = db;
     }
 
-
     // get an array of all genres
     getAll(callback) {
-
         const genres = [];
-        this.db.query("SELECT * FROM genre", function(err, rows, fields) {
-            // this.db.end();
+        this.db.query("SELECT * FROM genre", function(err, rows) {
             if (!err) {
                 rows.forEach(genre => {
                     const obj = {
@@ -27,8 +24,26 @@ class GenresModel {
     }
 
     // get an array of genres by movie id
-    getMovieGenres() {
-
+    getGenresByMovieId(movieId, callback) {
+        const genres = [];
+        const qry =
+            "SELECT * " +
+            "FROM genre " +
+            "INNER JOIN movie_genre t " +
+            "ON genre.id = t.genreId " +
+            "WHERE t.movieId = ?";
+        this.db.query(qry, [movieId], function(err, rows) {
+            if (err) {
+                callback(err, [])
+            }
+            rows.forEach(genre => {
+                genres.push({
+                    "id": genre.id,
+                    "name": genre.name
+                })
+            });
+            return callback(null, genres);
+        });
     }
 
     // create a new genre
@@ -57,4 +72,4 @@ class GenresModel {
     }
 }
 
-module.exports = GenresModel;
+module.exports = GenreModel;

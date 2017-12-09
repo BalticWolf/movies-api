@@ -33,14 +33,17 @@ class MovieModel {
     };
 
     getMovieById(id, callback) {
-        this.db.query("SELECT * FROM movie WHERE id = ?", [id], function(err, rows, fields) {
-            // this.db.end();
-            if (!err) {
-                callback(null, rows[0]);
+        const sql =
+            "SELECT * " +
+            "FROM movie " +
+            "WHERE id = ?";
+
+        this.db.query(sql, [id], function(err, rows) {
+            if (err) {
+                return callback(err, {});
             }
-            else
-                callback('Error while performing Query.', {})
-        });
+            return callback(null, rows[0]);
+        })
     };
 
     createMovie(body, callback) {
