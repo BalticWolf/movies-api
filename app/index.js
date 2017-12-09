@@ -8,8 +8,8 @@ const swaggerUi = require("swagger-ui-express"),
     swaggerDocument = require('../resources/swagger.json');
 
 // importer les routeurs
-const moviesRouter = require('./routers/movieRouter'),
-    genresRouter = require('./routers/genresRouter'),
+const movieRouter = require('./routers/movieRouter'),
+    genreRouter = require('./routers/genreRouter'),
     peopleRouter = require('./routers/peopleRouter'),
     reviewRouter = require('./routers/reviewRouter');
 
@@ -26,8 +26,8 @@ app.use(function(req, res, next) {
 app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // attribuer les routes aux routeurs
-app.use('/movies', moviesRouter);
-app.use('/genres', genresRouter);
+app.use('/movies', movieRouter);
+app.use('/genres', genreRouter);
 app.use('/people', peopleRouter);
 app.use('/reviews', reviewRouter);
 

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const connection = require('../dbConnector');
-const GenresModel = require('../models/genresModel');
+const GenresModel = require('../models/genreModel');
 
 
 const genresModel = new GenresModel(connection);

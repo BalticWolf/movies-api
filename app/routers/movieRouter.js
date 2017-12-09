@@ -3,25 +3,42 @@ const router = express.Router();
 const connection = require('../dbConnector');
 const MovieModel = require('../models/movieModel');
 const PeopleModel = require('../models/peopleModel');
+const ReviewModel = require('../models/reviewModel');
+const GenreModel = require('../models/genreModel');
 
 const movieModel = new MovieModel(connection);
 const peopleModel = new PeopleModel(connection);
+const reviewModel = new ReviewModel(connection);
+const genreModel = new GenreModel(connection);
 
 // réponse à l'url "/movies/:id"
 router.route('/:id')
     .get(async function(req, res) {
         const movieId = parseInt(req.params.id);
 
-        let movie = null;
+        let movie = {};
 
         try {
-            await movieModel.getMovieById(movieId, function(err, data) {
+            await reviewModel.getReviewsByMovieId(movieId, function(err, data) {
                 if(err) {
                     console.log(err)
                 } else {
-                    movie = data;
+                    Object.assign(movie, { reviews: data })
                 }
-            });
+            })
+        } catch (err) {
+            logger.error('Mysql error', err);
+            return res.status(500).send();
+        }
+
+        try {
+            await genreModel.getGenresByMovieId(movieId, function(err, data) {
+                if(err) {
+                    console.log(err)
+                } else {
+                    Object.assign(movie, { genres: data })
+                }
+            })
         } catch (err) {
             logger.error('Mysql error', err);
             return res.status(500).send();
@@ -32,7 +49,7 @@ router.route('/:id')
                 if(err) {
                     console.log(err)
                 } else {
-                    movie["actors"] = data;
+                    Object.assign(movie, { actors: data })
                 }
             })
         } catch (err) {
@@ -45,7 +62,7 @@ router.route('/:id')
                 if(err) {
                     console.log(err)
                 } else {
-                    movie["directors"] = data;
+                    Object.assign(movie, { directors: data })
                 }
             })
         } catch (err) {
@@ -58,10 +75,23 @@ router.route('/:id')
                 if(err) {
                     console.log(err)
                 } else {
-                    movie["writers"] = data;
-                    return res.status(200).json(movie);
+                    Object.assign(movie, { writers: data })
                 }
             })
+        } catch (err) {
+            logger.error('Mysql error', err);
+            return res.status(500).send();
+        }
+
+        try {
+            await movieModel.getMovieById(movieId, function(err, data) {
+                if(err) {
+                    console.log(err)
+                } else {
+                    Object.assign(movie, data);
+                    return res.status(200).json(movie);
+                }
+            });
         } catch (err) {
             logger.error('Mysql error', err);
             return res.status(500).send();
@@ -75,8 +105,8 @@ router.route('/:id')
             if(err) {
                 console.log(err)
             } else {
-                // Ajouter les détails acteurs...
-                return res.json(data)
+                // TODO: Ajouter les détails acteurs...
+                return res.status(200).json(data)
             }
         })
     })
@@ -87,7 +117,7 @@ router.route('/:id')
             if(err) {
                 console.log(err)
             } else {
-                return res.json(data)
+                return res.status(204).json(data)
             }
         });
     });
@@ -96,24 +126,24 @@ router.route('/')
     .all(function (req, res, next) {
         next();
     })
-    .get(function(req, res, next) {
+    .get(function(req, res) {
         movieModel.getAll(function(err, data) {
             if(err) {
                 console.log(err)
             } else {
-                return res.json(data)
+                return res.status(200).json(data)
             }
         })
     })
-    .post(function (req, res, next) {
+    .post(function (req, res) {
         const body = req.body;
 
         movieModel.createMovie(body, function(err, data) {
             if(err) {
                 console.log(err)
             } else {
-                // Ajouter les détails acteurs...
-                return res.json(data)
+                // TODO: Ajouter les détails acteurs...
+                return res.status(201).json(data)
             }
         })
     });
