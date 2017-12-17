@@ -10,11 +10,19 @@
   "tags": [
     {
       "name": "Movies",
-      "description": "API for movies in the system"
+      "description": "Requests to manage movies"
     },
     {
       "name": "Reviews",
-      "description": "API for reviews in the system"
+      "description": "Requests to manage reviews"
+    },
+    {
+      "name": "Genres",
+      "description": "Requests to manage genres"
+    },
+    {
+      "name": "People",
+      "description": "Requests to manage people"
     }
   ],
   "schemes": [
@@ -203,6 +211,77 @@
         }
       }
     },
+    "/genres/{id}": {
+      "put": {
+        "tags": [
+          "Genres"
+        ],
+        "summary": "Update genre by its id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of genre to update",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "New value of genre name",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Genre"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Genre deleted"
+          },
+          "404": {
+            "description": "Genre not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Genres"
+        ],
+        "summary": "Delete genre by its id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of genre to delete",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Genre deleted"
+          },
+          "404": {
+            "description": "Genre not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
     "/genres": {
       "get": {
         "tags": [
@@ -222,6 +301,31 @@
                 }
               }
             }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Genres"
+        ],
+        "summary": "Create a new genre",
+        "requestBody": {
+          "required": true,
+          "description": "Genre that we want to create",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Genre"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Genre created"
           },
           "500": {
             "description": "Server error"

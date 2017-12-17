@@ -1,6 +1,7 @@
 class GenreModel {
     constructor (db) {
         this.db = db;
+        this.tableName = "genre";
     }
 
     // get an array of all genres
@@ -28,13 +29,13 @@ class GenreModel {
         const genres = [];
         const qry =
             "SELECT * " +
-            "FROM genre " +
+            "FROM " + this.tableName + " a " +
             "INNER JOIN movie_genre t " +
-            "ON genre.id = t.genreId " +
+            "ON a.id = t.genreId " +
             "WHERE t.movieId = ?";
         this.db.query(qry, [movieId], function(err, rows) {
             if (err) {
-                callback(err, [])
+                return callback(err, [])
             }
             rows.forEach(genre => {
                 genres.push({
@@ -47,28 +48,52 @@ class GenreModel {
     }
 
     // create a new genre
-    newGenre() {
-
-    }
-
-    // add a genre to a movie
-    newMovieGenre() {
-
+    createGenre(body, callback) {
+        const sql =
+            "INSERT INTO " + this.tableName + " " +
+            "(name) " +
+            "VALUES ?";
+        const values = [
+            [
+                body.name
+            ]
+        ];
+        this.db.query(sql, [values], function(err, result) {
+            if (err) {
+                return callback('Error while performing Query.', [])
+            }
+            return callback(null, result);
+        });
     }
 
     // edit a genre by id
-    editGenre() {
-
+    updateGenre(id, body, callback) {
+        const sql =
+            "UPDATE " + this.tableName + " " +
+            "SET ? " +
+            "WHERE id = ?";
+        const data = {
+            name: body.name,
+        };
+        this.db.query(sql, [data, id], function(err) {
+            if (err) {
+                return callback('Error while performing Query.', {})
+            }
+            return callback(null, {});
+        });
     }
 
     // delete a genre by id
-    deleteGenre() {
-
-    }
-
-    // delete a genre of a movie by movie id
-    deleteMovieGenre() {
-
+    deleteGenre(id, callback) {
+        const sql =
+            "DELETE FROM " + this.tableName + " " +
+            "WHERE id = ?";
+        this.db.query(sql, [id], function(err) {
+            if (err) {
+                return callback('Error while performing Query.', {})
+            }
+            return callback(null, {});
+        });
     }
 }
 
