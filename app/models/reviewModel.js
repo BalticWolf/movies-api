@@ -1,18 +1,20 @@
 class ReviewModel {
     constructor (db) {
         this.db = db;
+        this.tableName = "review"
     }
 
     // Get an array of reviews by movie id
     getReviewsByMovieId(movieId, callback) {
         const reviews = [];
-        const qry =
+        const sql =
             "SELECT * " +
-            "FROM review " +
+            "FROM " + this.tableName + " " +
             "WHERE movieId = ?";
-        this.db.query(qry, [movieId], function(err, rows) {
+
+        this.db.query(sql, [movieId], function(err, rows) {
             if (err) {
-                callback(err, [])
+                return callback(err, [])
             }
             rows.forEach(review => {
                 reviews.push({
@@ -32,7 +34,7 @@ class ReviewModel {
     createReview(body, callback) {
         const instant = new Date(Date.now()).toISOString();
         const sql =
-            "INSERT INTO review " +
+            "INSERT INTO " + this.tableName + " " +
             "(username, title, content, movieId, dateCreated) " +
             "VALUES ?";
         const values = [
@@ -46,28 +48,44 @@ class ReviewModel {
         ];
 
         this.db.query(sql, [values], function(err, result) {
-            // this.db.end();
-            if (!err) {
-                callback(null, result);
+            if (err) {
+                return callback('Error while performing Query.', {})
             }
-            else
-                callback('Error while performing Query.', {})
+            return callback(null, result);
         });
     }
 
     // Edit a review by id
-    editReview() {
+    updateReview(id, body, callback) {
+        const sql =
+            "UPDATE " + this.tableName + " " +
+            "SET ? " +
+            "WHERE id = ?";
+        const data = {
+            title: body.title,
+            content: body.content
+        };
 
+        this.db.query(sql, [data, id], function(err) {
+            if (err) {
+                return callback('Error while performing Query.', {})
+            }
+            return callback(null, {});
+        });
     }
 
     // Delete a review by id
-    deleteReview() {
+    deleteReview(id) {
+        const sql =
+            "DELETE FROM " + this.tableName + " " +
+            "WHERE id = ?";
 
-    }
-
-    // Delete all reviews by movie id
-    deleteAllReviews() {
-
+        this.db.query(sql, [id], function(err) {
+            if (err) {
+                return callback('Error while performing Query.', {})
+            }
+            return callback(null, {});
+        });
     }
 }
 

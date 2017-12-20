@@ -8,19 +8,18 @@ class GenreModel {
     getAll(callback) {
         const genres = [];
         this.db.query("SELECT * FROM genre", function(err, rows) {
-            if (!err) {
-                rows.forEach(genre => {
-                    const obj = {
-                        "id": genre.id,
-                        "name": genre.name,
-                    };
-                    genres.push(obj);
-                });
-
-                callback(null, genres);
+            if (err) {
+                return callback('Error while performing Query.', [])
             }
-            else
-                callback('Error while performing Query.', [])
+            rows.forEach(genre => {
+                const obj = {
+                    "id": genre.id,
+                    "name": genre.name,
+                };
+                genres.push(obj);
+            });
+
+            return callback(null, genres);
         });
     }
 
@@ -33,6 +32,7 @@ class GenreModel {
             "INNER JOIN movie_genre t " +
             "ON a.id = t.genreId " +
             "WHERE t.movieId = ?";
+
         this.db.query(qry, [movieId], function(err, rows) {
             if (err) {
                 return callback(err, [])
@@ -58,6 +58,7 @@ class GenreModel {
                 body.name
             ]
         ];
+
         this.db.query(sql, [values], function(err, result) {
             if (err) {
                 return callback('Error while performing Query.', [])
@@ -75,6 +76,7 @@ class GenreModel {
         const data = {
             name: body.name,
         };
+
         this.db.query(sql, [data, id], function(err) {
             if (err) {
                 return callback('Error while performing Query.', {})
@@ -88,6 +90,7 @@ class GenreModel {
         const sql =
             "DELETE FROM " + this.tableName + " " +
             "WHERE id = ?";
+
         this.db.query(sql, [id], function(err) {
             if (err) {
                 return callback('Error while performing Query.', {})

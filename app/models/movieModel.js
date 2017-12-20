@@ -1,46 +1,50 @@
 class MovieModel {
     constructor (db) {
         this.db = db;
+        this.tableName = "movie"
     }
 
     getAll(callback) {
         const movies = [];
-        this.db.query("SELECT * FROM movie LIMIT 10", function(err, rows, fields) {
-            // this.db.end();
-            if (!err) {
-                rows.forEach(movie => {
-                    const obj = {
-                        "id": movie.id,
-                        "imdbId": movie.imdbId,
-                        "title": movie.title,
-                        "year": movie.year,
-                        "plot": movie.plot,
-                        "rating": movie.rating,
-                        "votes": movie.votes,
-                        "runtime": movie.runtime,
-                        "trailerId": movie.trailerId,
-                        "dateCreated": movie.dateCreated,
-                        "dateModified": movie.dateModified
-                    };
-                    movies.push(obj);
-                });
+        const sql =
+            "SELECT * " +
+            "FROM " + this.tableName + " " +
+            "LIMIT 10";
 
-                callback(null, movies);
+        this.db.query(sql, function(err, rows) {
+            if (err) {
+                return callback('Error while performing select Query.', movies)
             }
-            else
-                callback('Error while performing Query.', [])
+            rows.forEach(movie => {
+                const obj = {
+                    "id": movie.id,
+                    "imdbId": movie.imdbId,
+                    "title": movie.title,
+                    "year": movie.year,
+                    "plot": movie.plot,
+                    "rating": movie.rating,
+                    "votes": movie.votes,
+                    "runtime": movie.runtime,
+                    "trailerId": movie.trailerId,
+                    "dateCreated": movie.dateCreated,
+                    "dateModified": movie.dateModified
+                };
+                movies.push(obj);
+            });
+
+            return callback(null, movies);
         });
     };
 
     getMovieById(id, callback) {
         const sql =
             "SELECT * " +
-            "FROM movie " +
+            "FROM " + this.tableName + " " +
             "WHERE id = ?";
 
         this.db.query(sql, [id], function(err, rows) {
             if (err) {
-                return callback(err, {});
+                return callback('Error while performing select Query.', {});
             }
             return callback(null, rows[0]);
         })
@@ -49,9 +53,10 @@ class MovieModel {
     createMovie(body, callback) {
         const instant = new Date(Date.now()).toISOString();
         const sql =
-            "INSERT INTO movie " +
+            "INSERT INTO " + this.tableName + " " +
             "(imdbId, title, year, plot, rating, votes, runtime, trailerId, dateCreated, dateModified) " +
             "VALUES ?";
+
         const values = [
             [
                 body.imdbId,
@@ -66,23 +71,22 @@ class MovieModel {
                 instant
             ]
         ];
-
+        //TODO: add People and genres
         this.db.query(sql, [values], function(err, result) {
-            // this.db.end();
-            if (!err) {
-                callback(null, result);
+            if (err) {
+                return callback('Error while performing insert Query.', {})
             }
-            else
-                callback('Error while performing Query.', {})
+            return callback(null, result);
         });
     };
 
     updateMovie(id, body, callback) {
         const instant = new Date(Date.now()).toISOString();
         const sql =
-            "UPDATE movie " +
+            "UPDATE " + this.tableName + " " +
             "SET ? " +
             "WHERE id = ?";
+
         const data = {
                 imdbId: body.imdbId,
                 title: body.title,
@@ -94,25 +98,25 @@ class MovieModel {
                 trailerId: body.trailerId,
                 dateModified: instant
             };
-
-        this.db.query(sql, [data, id], function(err, rows, fields) {
-            // this.db.end();
-            if (!err) {
-                callback(null, data);
+        //TODO: add People and genres
+        this.db.query(sql, [data, id], function(err, result) {
+            if (err) {
+                return callback('Error while performing update Query.', {})
             }
-            else
-                callback('Error while performing Query.', {})
+            return callback(null, result);
         });
     };
 
     deleteMovie(id, callback) {
-        this.db.query("DELETE FROM movie WHERE id = ?", [id], function(err, rows, fields) {
-            // this.db.end();
-            if (!err) {
-                callback(null, {});
+        const sql =
+            "DELETE FROM " + this.tableName + " " +
+            "WHERE id = ?";
+
+        this.db.query(sql, [id], function(err) {
+            if (err) {
+                return callback('Error while performing delete Query.', {})
             }
-            else
-                callback('Error while performing Query.', {})
+            return callback(null, {});
         });
     };
 }

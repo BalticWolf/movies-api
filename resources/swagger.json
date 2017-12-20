@@ -182,7 +182,7 @@
             "ApiKeyAuth": []
           }
         ],
-        "summary": "Create a new movie",
+        "summary": "Add a new movie",
         "requestBody": {
           "required": true,
           "description": "Movie that we want to create",
@@ -242,7 +242,7 @@
         },
         "responses": {
           "200": {
-            "description": "Genre deleted"
+            "description": "Genre updated"
           },
           "404": {
             "description": "Genre not found"
@@ -311,7 +311,7 @@
         "tags": [
           "Genres"
         ],
-        "summary": "Create a new genre",
+        "summary": "Add a new genre",
         "requestBody": {
           "required": true,
           "description": "Genre that we want to create",
@@ -326,6 +326,77 @@
         "responses": {
           "201": {
             "description": "Genre created"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/people/{id}": {
+      "put": {
+        "tags": [
+          "People"
+        ],
+        "summary": "Update person by its id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of person to update",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "New value of person name",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/People"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Person updated"
+          },
+          "404": {
+            "description": "Person not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "People"
+        ],
+        "summary": "Delete person by its id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of person to delete",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Person deleted"
+          },
+          "404": {
+            "description": "Person not found"
           },
           "500": {
             "description": "Server error"
@@ -382,6 +453,77 @@
                 }
               }
             }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/reviews/{id}": {
+      "put": {
+        "tags": [
+          "Reviews"
+        ],
+        "summary": "Update review by its id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of review to update",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "New value of review",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Review"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Review updated"
+          },
+          "404": {
+            "description": "Review not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Reviews"
+        ],
+        "summary": "Delete a review",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of review to delete",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Review deleted"
+          },
+          "404": {
+            "description": "Review not found"
           },
           "500": {
             "description": "Server error"

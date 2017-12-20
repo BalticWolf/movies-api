@@ -7,7 +7,7 @@ const genreModel = new GenreModel(connection);
 
 router.route("/:id")
     .put(function(req, res) {
-        const id = req.params.id;
+        const id = parseInt(req.params.id);
         const body = req.body;
 
         genreModel.updateGenre(id, body, function(err, data) {
@@ -19,7 +19,7 @@ router.route("/:id")
         });
     })
     .delete(function(req, res) {
-        const id = req.params.id;
+        const id = parseInt(req.params.id);
 
         genreModel.deleteGenre(id, function(err, data) {
             if(err) {

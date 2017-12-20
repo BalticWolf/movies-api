@@ -11,77 +11,12 @@ const peopleModel = new PeopleModel(connection);
 const reviewModel = new ReviewModel(connection);
 const genreModel = new GenreModel(connection);
 
-// réponse à l'url "/movies/:id"
+// methods applied to route "/movies/:id"
 router.route('/:id')
     .get(async function(req, res) {
         const movieId = parseInt(req.params.id);
 
-        let movie = {};
-
-        try {
-            await reviewModel.getReviewsByMovieId(movieId, function(err, data) {
-                if(err) {
-                    console.log(err)
-                } else {
-                    Object.assign(movie, { reviews: data })
-                }
-            })
-        } catch (err) {
-            logger.error('Mysql error', err);
-            return res.status(500).send();
-        }
-
-        try {
-            await genreModel.getGenresByMovieId(movieId, function(err, data) {
-                if(err) {
-                    console.log(err)
-                } else {
-                    Object.assign(movie, { genres: data })
-                }
-            })
-        } catch (err) {
-            logger.error('Mysql error', err);
-            return res.status(500).send();
-        }
-
-        try {
-            await peopleModel.getPeopleByMovieId("movie_actor", movieId, function(err, data) {
-                if(err) {
-                    console.log(err)
-                } else {
-                    Object.assign(movie, { actors: data })
-                }
-            })
-        } catch (err) {
-            logger.error('Mysql error', err);
-            return res.status(500).send();
-        }
-
-        try {
-            await peopleModel.getPeopleByMovieId("movie_director", movieId, function(err, data) {
-                if(err) {
-                    console.log(err)
-                } else {
-                    Object.assign(movie, { directors: data })
-                }
-            })
-        } catch (err) {
-            logger.error('Mysql error', err);
-            return res.status(500).send();
-        }
-
-        try {
-            await peopleModel.getPeopleByMovieId("movie_writer", movieId, function(err, data) {
-                if(err) {
-                    console.log(err)
-                } else {
-                    Object.assign(movie, { writers: data })
-                }
-            })
-        } catch (err) {
-            logger.error('Mysql error', err);
-            return res.status(500).send();
-        }
+        const movie = {};
 
         try {
             await movieModel.getMovieById(movieId, function(err, data) {
@@ -89,6 +24,46 @@ router.route('/:id')
                     console.log(err)
                 } else {
                     Object.assign(movie, data);
+                }
+            });
+
+            await genreModel.getGenresByMovieId(movieId, function(err, data) {
+                if(err) {
+                    console.log(err)
+                } else {
+                    Object.assign(movie, { genres: data })
+                }
+            });
+
+            await peopleModel.getPeopleByMovieId("movie_actor", movieId, function(err, data) {
+                if(err) {
+                    console.log(err)
+                } else {
+                    Object.assign(movie, { actors: data })
+                }
+            });
+
+            await peopleModel.getPeopleByMovieId("movie_director", movieId, function(err, data) {
+                if(err) {
+                    console.log(err)
+                } else {
+                    Object.assign(movie, { directors: data })
+                }
+            });
+
+            await peopleModel.getPeopleByMovieId("movie_writer", movieId, function(err, data) {
+                if(err) {
+                    console.log(err)
+                } else {
+                    Object.assign(movie, { writers: data })
+                }
+            });
+
+            await reviewModel.getReviewsByMovieId(movieId, function(err, data) {
+                if(err) {
+                    console.log(err)
+                } else {
+                    Object.assign(movie, { reviews: data });
                     return res.status(200).json(movie);
                 }
             });
@@ -111,7 +86,7 @@ router.route('/:id')
         })
     })
     .delete(function(req, res) {
-        const id = req.params.id;
+        const id = parseInt(req.params.id);
 
         movieModel.deleteMovie(id, function(err, data) {
             if(err) {
@@ -122,6 +97,7 @@ router.route('/:id')
         });
     });
 
+// methods applied to route "/movies"
 router.route('/')
     .all(function (req, res, next) {
         next();

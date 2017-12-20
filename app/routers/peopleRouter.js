@@ -5,6 +5,31 @@ const PeopleModel = require('../models/peopleModel');
 
 const peopleModel = new PeopleModel(connection);
 
+router.route('/:id')
+    .put(function(req, res) {
+        const id = parseInt(req.params.id);
+        const body = req.body;
+
+        peopleModel.updatePerson(id, body, function(err, data) {
+            if(err) {
+                console.log(err)
+            } else {
+                return res.status(200).json(data)
+            }
+        });
+    })
+    .delete(function(req, res) {
+        const id = parseInt(req.params.id);
+
+        peopleModel.deletePerson(id, function(err, data) {
+            if(err) {
+                console.log(err)
+            } else {
+                return res.status(204).json(data)
+            }
+        });
+    });
+
 router.route('/')
     .all(function (req, res, next) {
         next();
