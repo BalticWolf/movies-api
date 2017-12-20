@@ -1,0 +1,26 @@
+{
+  "name": "movies-api",
+  "version": "1.0.0",
+  "description": "Only good movies !",
+  "main": "index.js",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "express": "^4.15.3",
+    "mysql": "^2.15.0",
+    "swagger-ui-express": "^2.0.9"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node app/index.js 8080"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ThierryChampot/movies-api.git"
+  },
+  "author": "Sarah Drapeau, Timothee Aupetit, Thierry Champot",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ThierryChampot/movies-api.git"
+  },
+  "homepage": "https://github.com/ThierryChampot/movies-api.git#readme"
+}

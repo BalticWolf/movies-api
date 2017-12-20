@@ -1,0 +1,731 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Movies API",
+    "description": "API to manage movie data"
+  },
+  "host": "localhost:8080",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Movies",
+      "description": "Requests to manage movies"
+    },
+    {
+      "name": "Reviews",
+      "description": "Requests to manage reviews"
+    },
+    {
+      "name": "Genres",
+      "description": "Requests to manage genres"
+    },
+    {
+      "name": "People",
+      "description": "Requests to manage people"
+    }
+  ],
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/movies/{id}": {
+      "get": {
+        "tags": [
+          "Movies"
+        ],
+        "summary": "Get one movie",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of movie to fetch",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Movie"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Movie not found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Movies"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "summary": "Update one movie",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of movie to update",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Movie that we want to update",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Movie"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Movie"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Movie not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Movies"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "summary": "Delete one movie",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of movie to delete",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deleted"
+          },
+          "404": {
+            "description": "Movie not found"
+          }
+        }
+      }
+    },
+    "/movies": {
+      "get": {
+        "tags": [
+          "Movies"
+        ],
+        "summary": "Get all movies",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Movie"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Movies"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "summary": "Add a new movie",
+        "requestBody": {
+          "required": true,
+          "description": "Movie that we want to create",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Movie"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Movie"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/genres/{id}": {
+      "put": {
+        "tags": [
+          "Genres"
+        ],
+        "summary": "Update genre by its id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of genre to update",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "New value of genre name",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Genre"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Genre updated"
+          },
+          "404": {
+            "description": "Genre not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Genres"
+        ],
+        "summary": "Delete genre by its id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of genre to delete",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Genre deleted"
+          },
+          "404": {
+            "description": "Genre not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/genres": {
+      "get": {
+        "tags": [
+          "Genres"
+        ],
+        "summary": "Get all genres",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Genre"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Genres"
+        ],
+        "summary": "Add a new genre",
+        "requestBody": {
+          "required": true,
+          "description": "Genre that we want to create",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Genre"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Genre created"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/people/{id}": {
+      "put": {
+        "tags": [
+          "People"
+        ],
+        "summary": "Update person by its id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of person to update",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "New value of person name",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/People"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Person updated"
+          },
+          "404": {
+            "description": "Person not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "People"
+        ],
+        "summary": "Delete person by its id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of person to delete",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Person deleted"
+          },
+          "404": {
+            "description": "Person not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/people": {
+      "get": {
+        "tags": ["People"],
+        "summary": "Get all the people",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/People"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "People"
+        ],
+        "summary": "Add a new person",
+        "requestBody": {
+          "required": true,
+          "description": "Person that we want to create",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/People"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/People"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/reviews/{id}": {
+      "put": {
+        "tags": [
+          "Reviews"
+        ],
+        "summary": "Update review by its id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of review to update",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "New value of review",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Review"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Review updated"
+          },
+          "404": {
+            "description": "Review not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Reviews"
+        ],
+        "summary": "Delete a review",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of review to delete",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Review deleted"
+          },
+          "404": {
+            "description": "Review not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/reviews": {
+      "post": {
+        "tags": [
+          "Reviews"
+        ],
+        "summary": "Add a new review",
+        "requestBody": {
+          "required": true,
+          "description": "Review that we want to create",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Review"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Review"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-KEY"
+      }
+    },
+    "schemas": {
+      "Movie": {
+        "type": "object",
+        "required": [
+          "imdbId",
+          "title",
+          "year",
+          "plot",
+          "rating",
+          "votes",
+          "runtime"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "readOnly": true
+          },
+          "imdbId": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "year": {
+            "type": "integer",
+            "minimum": 1880
+          },
+          "plot": {
+            "type": "string"
+          },
+          "rating": {
+            "type": "number",
+            "format": "float",
+            "minimum": 0,
+            "maximum": 10
+          },
+          "votes": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "runtime": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "trailerId": {
+            "type": "string",
+            "nullable": true
+          },
+          "dateCreated": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "dateModified": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "actors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/People"
+            },
+            "nullable": true
+          },
+          "directors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/People"
+            },
+            "nullable": true
+          },
+          "writers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/People"
+            },
+            "nullable": true
+          },
+          "reviews": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Review"
+            },
+            "nullable": true
+          },
+          "genres": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Genre"
+            },
+            "nullable": true
+          }
+        }
+      },
+      "People": {
+        "required": ["name"],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "Genre": {
+        "required": ["name"],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "readOnly": true
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "Review": {
+        "required": [
+          "username",
+          "content",
+          "movieId"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "readOnly": true
+          },
+          "username": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "movieId": {
+            "type": "integer"
+          },
+          "dateCreated": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          }
+        }
+      }
+    }
+  }
+}
