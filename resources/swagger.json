@@ -5,8 +5,20 @@
     "title": "Movies API",
     "description": "API to manage movie data"
   },
-  "host": "localhost:8080",
-  "basePath": "/",
+  "servers": [
+    {
+      "url": "{protocol}://localhost:8080",
+      "variables": {
+        "protocol": {
+          "enum": [
+            "http",
+            "https"
+          ],
+          "default": "http"
+        }
+      }
+    }
+  ],
   "tags": [
     {
       "name": "Movies",
@@ -24,16 +36,6 @@
       "name": "People",
       "description": "Requests to manage people"
     }
-  ],
-  "schemes": [
-    "http",
-    "https"
-  ],
-  "consumes": [
-    "application/json"
-  ],
-  "produces": [
-    "application/json"
   ],
   "paths": {
     "/movies/{id}": {
@@ -80,7 +82,7 @@
           }
         ],
         "summary": "Update one movie",
-        "parameters": [
+        "parameters": [// TODO: add api key header param
           {
             "name": "id",
             "in": "path",
@@ -114,6 +116,9 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized access"
+          },
           "404": {
             "description": "Movie not found"
           }
@@ -129,7 +134,7 @@
           }
         ],
         "summary": "Delete one movie",
-        "parameters": [
+        "parameters": [// TODO: add api key header param
           {
             "name": "id",
             "in": "path",
@@ -144,6 +149,9 @@
         "responses": {
           "204": {
             "description": "Deleted"
+          },
+          "401": {
+            "description": "Unauthorized access"
           },
           "404": {
             "description": "Movie not found"
@@ -182,6 +190,7 @@
             "ApiKeyAuth": []
           }
         ],
+        // TODO: add api key header param
         "summary": "Add a new movie",
         "requestBody": {
           "required": true,
@@ -205,6 +214,9 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized access"
+          },
           "500": {
             "description": "Server error"
           }
@@ -216,8 +228,13 @@
         "tags": [
           "Genres"
         ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
         "summary": "Update genre by its id",
-        "parameters": [
+        "parameters": [// TODO: add api key header param
           {
             "name": "id",
             "in": "path",
@@ -244,6 +261,9 @@
           "200": {
             "description": "Genre updated"
           },
+          "401": {
+            "description": "Unauthorized access"
+          },
           "404": {
             "description": "Genre not found"
           },
@@ -256,8 +276,13 @@
         "tags": [
           "Genres"
         ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
         "summary": "Delete genre by its id",
-        "parameters": [
+        "parameters": [// TODO: add api key header param
           {
             "name": "id",
             "in": "path",
@@ -272,6 +297,9 @@
         "responses": {
           "204": {
             "description": "Genre deleted"
+          },
+          "401": {
+            "description": "Unauthorized access"
           },
           "404": {
             "description": "Genre not found"
@@ -311,6 +339,12 @@
         "tags": [
           "Genres"
         ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        // TODO: add api key header param
         "summary": "Add a new genre",
         "requestBody": {
           "required": true,
@@ -327,6 +361,9 @@
           "201": {
             "description": "Genre created"
           },
+          "401": {
+            "description": "Unauthorized access"
+          },
           "500": {
             "description": "Server error"
           }
@@ -338,8 +375,13 @@
         "tags": [
           "People"
         ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
         "summary": "Update person by its id",
-        "parameters": [
+        "parameters": [// TODO: add api key header param
           {
             "name": "id",
             "in": "path",
@@ -366,6 +408,9 @@
           "200": {
             "description": "Person updated"
           },
+          "401": {
+            "description": "Unauthorized access"
+          },
           "404": {
             "description": "Person not found"
           },
@@ -378,8 +423,13 @@
         "tags": [
           "People"
         ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
         "summary": "Delete person by its id",
-        "parameters": [
+        "parameters": [// TODO: add api key header param
           {
             "name": "id",
             "in": "path",
@@ -394,6 +444,9 @@
         "responses": {
           "204": {
             "description": "Person deleted"
+          },
+          "401": {
+            "description": "Unauthorized access"
           },
           "404": {
             "description": "Person not found"
@@ -431,6 +484,12 @@
         "tags": [
           "People"
         ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        // TODO: add api key header param
         "summary": "Add a new person",
         "requestBody": {
           "required": true,
@@ -453,6 +512,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized access"
           },
           "500": {
             "description": "Server error"

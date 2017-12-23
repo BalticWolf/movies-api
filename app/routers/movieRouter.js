@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const connection = require('../dbConnector');
+const api_key = require('../../config/config').api_key;
+
 const MovieModel = require('../models/movieModel');
 const PeopleModel = require('../models/peopleModel');
 const ReviewModel = require('../models/reviewModel');
@@ -73,28 +75,41 @@ router.route('/:id')
         }
     })
     .put(function(req, res) {
-        const id = parseInt(req.params.id);
-        const body = req.body;
+        const apiKey = req.headers["x-api-key"];
 
-        movieModel.updateMovie(id, body, function (err, data) {
-            if(err) {
-                console.log(err)
-            } else {
-                // TODO: Ajouter les détails acteurs...
-                return res.status(200).json(data)
-            }
-        })
+        if(apiKey === api_key) {
+            const id = parseInt(req.params.id);
+            const body = req.body;
+
+            movieModel.updateMovie(id, body, function (err, data) {
+                if(err) {
+                    console.log(err)
+                } else {
+                    // TODO: Ajouter les détails acteurs...
+                    return res.status(200).json(data)
+                }
+            })
+        } else {
+            return res.status(401).send()
+        }
+
     })
     .delete(function(req, res) {
-        const id = parseInt(req.params.id);
+        const apiKey = req.headers["x-api-key"];
 
-        movieModel.deleteMovie(id, function(err, data) {
-            if(err) {
-                console.log(err)
-            } else {
-                return res.status(204).json(data)
-            }
-        });
+        if(apiKey === api_key) {
+            const id = parseInt(req.params.id);
+
+            movieModel.deleteMovie(id, function (err, data) {
+                if (err) {
+                    console.log(err)
+                } else {
+                    return res.status(204).json(data)
+                }
+            });
+        } else {
+            return res.status(401).send()
+        }
     });
 
 // methods applied to route "/movies"
@@ -112,16 +127,22 @@ router.route('/')
         })
     })
     .post(function (req, res) {
-        const body = req.body;
+        const apiKey = req.headers["x-api-key"];
 
-        movieModel.createMovie(body, function(err, data) {
-            if(err) {
-                console.log(err)
-            } else {
-                // TODO: Ajouter les détails acteurs...
-                return res.status(201).json(data)
-            }
-        })
+        if(apiKey === api_key) {
+            const body = req.body;
+
+            movieModel.createMovie(body, function(err, data) {
+                if(err) {
+                    console.log(err)
+                } else {
+                    // TODO: Ajouter les détails acteurs...
+                    return res.status(201).json(data)
+                }
+            })
+        } else {
+            return res.status(401).send()
+        }
     });
 
 module.exports = router;
